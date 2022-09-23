@@ -1,0 +1,8 @@
+{
+  "spriteFilePath": "resources/sprites/platform.png",
+  "x": 40,
+  "y": 90,
+  "width": 20,
+  "height": 4,
+  "moveDistance" : 2
+}

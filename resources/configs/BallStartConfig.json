@@ -1,0 +1,11 @@
+{
+  "spriteFilePath": "resources/sprites/ball.png",
+  "x": 48,
+  "y": 87,
+  "width": 3,
+  "height": 3,
+  "speedX" : 0,
+  "speedY" : 0,
+  "unreleasedMoveDistance" : 2,
+  "baseSpeed" : 0.25
+}

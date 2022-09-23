@@ -1,0 +1,8 @@
+{
+  "spriteFilePath": "resources/sprites/whiteTile.png",
+  "x": 13,
+  "y": 13,
+  "width": 15,
+  "height": 7,
+  "healthPoints" : 1
+}
