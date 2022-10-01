@@ -4,10 +4,10 @@
 class ConstantXMoveNode
 {
 public:
-    explicit ConstantXMoveNode(Coord* coord, int moveDistance)
-        : coord(coord), moveDistance(moveDistance){}
+    explicit ConstantXMoveNode(std::shared_ptr<Coord> coord, std::shared_ptr<int> moveDistance)
+        : coord(std::move(coord)), moveDistance(std::move(moveDistance)){}
 
-    Coord* getConstXMoveCoord()
+    std::shared_ptr<Coord> getCoord()
     {
         return coord;
     }
@@ -20,7 +20,7 @@ public:
 
     int getMoveDistance()
     {
-        return moveDistance;
+        return *moveDistance;
     }
 
     friend bool operator==(const ConstantXMoveNode& lhs, const ConstantXMoveNode& rhs)
@@ -29,6 +29,6 @@ public:
     }
 
 private:
-    Coord* coord;
-    int moveDistance;
+    std::shared_ptr<Coord> coord;
+    std::shared_ptr<int> moveDistance;
 };

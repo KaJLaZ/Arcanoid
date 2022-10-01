@@ -6,7 +6,6 @@
 #include "../systems/ReleaseBallSystem.h"
 #include "../systems/RenderSystem.h"
 #include "../systems/DeflectSystem.h"
-#include "../systems/TileHealthSystem.h"
 
 class SystemManager
 {
@@ -41,11 +40,6 @@ public:
         return tileDeflectSystem;
     }
 
-    TileHealthSystem& getTileHealthSystem()
-    {
-        return tileHealthSystem;
-    }
-
 private:
     RenderSystem renderSystem;
     ConstantXMoveSystem constantXMoveSystem;
@@ -53,5 +47,4 @@ private:
     MoveBallSystem moveBallSystem;
     MouseTrackSystem mouseTrackSystem;
     DeflectSystem tileDeflectSystem;
-    TileHealthSystem tileHealthSystem;
 };

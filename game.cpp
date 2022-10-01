@@ -27,11 +27,10 @@ public:
 	}
 
 	virtual bool Init() {
+		config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
 		systemManager = new SystemManager();
-		entityManager = EntitiesFabric::makeEntityManager(systemManager);
+		entityManager = EntitiesFabric::makeEntityManager(configs_holder, systemManager);
 		systemManager->getDeflectSystem().setSystemManager(systemManager);
-		//systemManager->getTileHealthSystem().setEntityManager(entityManager);
-		systemManager->getTileHealthSystem().setSysteManager(systemManager);
 		
 		return true;
 	}
@@ -45,12 +44,18 @@ public:
 		systemManager->getDeflectSystem().process();
 		drawTestBackground();
 		systemManager->getRenderSystem().process();
-		
+
+		/*auto whiteTileDeflectNode = new DeflectNode(entityManager->getBall().getReleaseBallCoord(),
+	entityManager->getWhiteTile().getRenderNodeCoord(), entityManager->getBall().getBallSpeed(),
+	entityManager->getBall().getSize(), entityManager->getWhiteTile().getSize(),
+	DeflectNode::Target::Tile, entityManager->getBall().getBaseSpeed());
+
+		systemManager->getDeflectSystem().addNode(whiteTileDeflectNode);*/
 		return false;
 	}
 
 	virtual void onMouseMove(int x, int y, int xrelative, int yrelative) {
-		systemManager->getMouseTrackSystem().process(entityManager->getBall(), x, y);
+		systemManager->getMouseTrackSystem().process(entityManager->getBall().get_mouse_track_node(), x, y);
 	}
 
 	virtual void onMouseButtonClick(FRMouseButton button, bool isReleased) {
@@ -80,7 +85,7 @@ int main(int argc, char* argv[])
 	return run(new Arcanoid);
 }
 
-void createBorders(SystemManager* systemManager, EntityManager* entityManager)
+/*void createBorders(SystemManager* systemManager, EntityManager* entityManager)
 {
 	systemManager->getConstantXMoveSystem().removeNode(entityManager->getBall());
 	systemManager->getreleaseBallSystem().process();
@@ -106,4 +111,4 @@ void createBorders(SystemManager* systemManager, EntityManager* entityManager)
 	systemManager->getDeflectSystem().addNode(whiteTileDeflectNode);
 	systemManager->getDeflectSystem().addNode(platformDeflectNode);
 	systemManager->getDeflectSystem().addNode(leftBorder);
-}
+}*/

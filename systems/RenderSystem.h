@@ -8,7 +8,7 @@ class RenderSystem
 public:
     void addNode(RenderNode& node)
     {
-        setSpriteSize(node.getSprite(), node.getSize().getWeigth(), node.getSize().getHeigth());
+        setSpriteSize(&*node.getSprite(), node.getSize().getWidth(), node.getSize().getHeigth());
         nodes.emplace_back(node);
     }
     
@@ -16,7 +16,7 @@ public:
     {
         std::for_each(nodes.begin(), nodes.end(),[] (RenderNode& node)
         {
-            drawSprite(node.getSprite(), std::round(node.getRenderNodeCoord()->getX()), std::round(node.getRenderNodeCoord()->getY()));
+            drawSprite(&*node.getSprite(), std::round(node.getCoord()->getX()), std::round(node.getCoord()->getY()));
         });
     }
     

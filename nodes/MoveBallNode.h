@@ -5,33 +5,33 @@
 class MoveBallNode
 {
 public:
-    MoveBallNode(Coord* ballCoord, Speed* speed)
-        : ballCoord(ballCoord),
-          speed(speed){}
+    MoveBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Speed> speed)
+        : ballCoord(std::move(ballCoord)),
+          speed(std::move(speed)){}
 
-    Coord* getMoveBallCoord()
+    std::shared_ptr<Coord> getCoord()
     {
         return ballCoord;
     }
 
-    Speed* getBallSpeed()
+    std::shared_ptr<Speed> getSpeed()
     {
         return speed;
     }
 
-    void shiftBallCoord(double x, double y)
+    void shiftCoord(double x, double y)
     {
         this->ballCoord->setX(ballCoord->getX() + x);
         this->ballCoord->setY(ballCoord->getY() + y);
     }
 
-    void shiftBallSpeed(double x, double y)
+    void shiftSpeed(double x, double y)
     {
         this->speed->setX(speed->getX() + x);
         this->speed->setY(speed->getY() + y);
     }
 
 private:
-    Coord* ballCoord;
-    Speed* speed;
+    std::shared_ptr<Coord> ballCoord;
+    std::shared_ptr<Speed> speed;
 };

@@ -13,38 +13,42 @@ namespace config
         inline static const char* WHITE_TILE_CONFIG_FILE_PATH = "resources/configs/WhiteTileStartConfig.json";
         inline static const char* BALL_CONFIG_FILE_PATH = "resources/configs/BallStartConfig.json";
         
-        PlatformStartConfig& getPlatformStartConfig()
+        PlatformStartConfig getPlatformStartConfig()
         {
-            if(platformStartConfig.spriteFilePath.empty())
+            if(platformStartConfig == nullptr)
             {
-                platformStartConfig = ConfigLoader::loadConfig<PlatformStartConfig>(PLATFORM_CONFIG_FILE_PATH);
+                platformStartConfig = std::make_unique<PlatformStartConfig>(
+                    ConfigLoader::loadConfig<PlatformStartConfig>(PLATFORM_CONFIG_FILE_PATH));
+                
             }
-            return platformStartConfig;
+            return *platformStartConfig;
         }
 
-        WhiteTileStartConfig& getWhiteTileStartConfig()
+        WhiteTileStartConfig getWhiteTileStartConfig()
         {
-            if(whiteTileStartConfig.spriteFilePath.empty())
+            if(whiteTileStartConfig == nullptr)
             {
-                whiteTileStartConfig = ConfigLoader::loadConfig<WhiteTileStartConfig>(WHITE_TILE_CONFIG_FILE_PATH);
+                whiteTileStartConfig = std::make_unique<WhiteTileStartConfig>(
+                    ConfigLoader::loadConfig<WhiteTileStartConfig>(WHITE_TILE_CONFIG_FILE_PATH));
             }
-            return whiteTileStartConfig;
+            return *whiteTileStartConfig;
         }
 
-        BallStartConfig& getBallStartConfig()
+        BallStartConfig getBallStartConfig()
         {
-            if(ballStartConfig.spriteFilePath.empty())
+            if(ballStartConfig == nullptr)
             {
-                ballStartConfig = ConfigLoader::loadConfig<BallStartConfig>(BALL_CONFIG_FILE_PATH);
+                ballStartConfig = std::make_unique<BallStartConfig>(
+                    ConfigLoader::loadConfig<BallStartConfig>(BALL_CONFIG_FILE_PATH));
             }
-            return ballStartConfig;
+            return *ballStartConfig;
         }
 
         //TODO think about modification in oop style to not multiple mess
     
     private:
-        PlatformStartConfig platformStartConfig;
-        WhiteTileStartConfig whiteTileStartConfig;
-        BallStartConfig ballStartConfig;
+        std::unique_ptr<PlatformStartConfig> platformStartConfig;
+        std::unique_ptr<WhiteTileStartConfig> whiteTileStartConfig;
+        std::unique_ptr<BallStartConfig> ballStartConfig;
     };
 }

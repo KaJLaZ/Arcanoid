@@ -23,7 +23,7 @@ public:
             double propX = difX / absSum;
             double propY = difY / absSum;
 
-            node.setBallSpeed(node.getBaseSpeed() * propX, node.getBaseSpeed() * propY);
+            node.setBallSpeed(*node.getBaseSpeed() * propX, *node.getBaseSpeed() * propY);
         });
     }
 

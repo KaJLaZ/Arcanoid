@@ -1,6 +1,5 @@
 #pragma once
 
-// To use the framework define _WINDOWS in project's settings!
 #if defined(_WINDOWS)
 #if defined(FRAMEWORK_PROJECT)
 #define FRAMEWORK_API extern "C" __declspec(dllexport)
@@ -10,9 +9,6 @@
 #else
 #define FRAMEWORK_API 
 #endif
-
-
-// Bonus for any found bugs in the framework!
 
 class Sprite;
 

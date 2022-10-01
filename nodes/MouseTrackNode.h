@@ -5,9 +5,9 @@
 class MouseTrackNode
 {
 public:
-    explicit MouseTrackNode(Coord* mouseCoord) : mouseCoord(mouseCoord){}
+    explicit MouseTrackNode(std::shared_ptr<Coord> mouseCoord) : mouseCoord(std::move(mouseCoord)){}
 
-    Coord* getMouseCoord()
+    std::shared_ptr<Coord> getCoord()
     {
         return mouseCoord;
     }
@@ -19,5 +19,5 @@ public:
     }
 
 private:
-    Coord* mouseCoord;
+    std::shared_ptr<Coord> mouseCoord;
 };

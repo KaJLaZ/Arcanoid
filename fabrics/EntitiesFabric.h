@@ -1,8 +1,9 @@
 #pragma once
 
+#include "../configs/ConfigResolutionAdjuster.h"
+#include "../entities/Ball.h"
 #include "../entities/Platform.h"
 #include "../entities/WhiteTile.h"
-#include "../entities/Ball.h"
 #include "../managers/EntityManager.h"
 #include "../managers/SystemManager.h"
 #include "../systems/ConstantXMoveSystem.h"
@@ -13,78 +14,116 @@
 class EntitiesFabric
 {
 public:
-    static Platform* makePlatformEntity(config::PlatformStartConfig& config)
+    static ConstantXMoveNode* makeConstanXMoveNode(std::shared_ptr<Coord> coord, std::shared_ptr<int> moveDistance)
     {
-        return new Platform(
-            createSprite(config.spriteFilePath.c_str()),
-            new Coord(config.posX, config.posY),
-            Size(config.width, config.height),
-            config.moveDistance);
+        return new ConstantXMoveNode(std::move(coord), std::move(moveDistance));
     }
 
-    static Ball* makeBallEntity(config::BallStartConfig& config)
+    static DeflectNode* makeDeflectNode(std::shared_ptr<Coord> ballCord, std::shared_ptr<Coord> targetCord,
+        std::shared_ptr<Speed> ballSpeed, Size ballSize, Size targetSize, DeflectNode::Target target,
+        std::shared_ptr<double> baseSpeed)
     {
-        return new Ball(
-            createSprite(config.spriteFilePath.c_str()),
-            new Coord(config.posX, config.posY),
-            new Coord(config.posX, config.posY),
-             Size(config.width, config.height),
-             new Speed(config.speedX, config.speedY),
-            config.unreleasedMoveDistance, config.baseSpeed);
+        return new DeflectNode(std::move(ballCord), std::move(targetCord), std::move(ballSpeed), ballSize, targetSize, target, std::move(baseSpeed));
     }
 
-    static WhiteTile* makeWhiteTitleEntity(config::WhiteTileStartConfig& config)
+    static MouseTrackNode* makeMouseTrackNode(std::shared_ptr<Coord> mouseCoord)
     {
-        return new WhiteTile(
-            createSprite(config.spriteFilePath.c_str()),
-            new Coord(config.posX, config.posY),
-            Size(config.width, config.height),
-            new int(config.healthPoints));
+        return new MouseTrackNode(std::move(mouseCoord));
     }
 
-    static EntityManager* makeEntityManager(SystemManager* systemManager)
+    static MoveBallNode* makeMoveBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Speed> speed)
     {
-        config::ConfigsHolder configsHolder;
+        return new MoveBallNode(std::move(ballCoord), std::move(speed));
+    }
 
-        auto platformConfig = configsHolder.getPlatformStartConfig();
-        auto adjPlatformConfig = config::ConfigResolutionAdjuster::adjustPlatformConfig(platformConfig);
-        auto platform = makePlatformEntity(adjPlatformConfig);
+    static ReleaseBallNode* makeReleaseBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Coord> mouseCoord,
+        std::shared_ptr<Speed> ballSpeed, std::shared_ptr<double> baseSpeed)
+    {
+        return new ReleaseBallNode(std::move(ballCoord), std::move(mouseCoord), std::move(ballSpeed), std::move(baseSpeed));
+    }
 
-        auto ballConfig = configsHolder.getBallStartConfig();
-        auto adjustedBallConfig = config::ConfigResolutionAdjuster::adjustBallConfig(ballConfig);
-        auto ball = makeBallEntity(adjustedBallConfig);
-
-        auto tileConfig = configsHolder.getWhiteTileStartConfig();
-        auto adjustedTileConfig = config::ConfigResolutionAdjuster::adjustWhiteTileConfig(tileConfig);
-        auto whiteTile = makeWhiteTitleEntity(adjustedTileConfig);
-        
-        auto entityManager = new EntityManager(configsHolder, platform, ball, whiteTile);
-
-        initPlatformEntity(systemManager->getRenderSystem(), systemManager->getConstantXMoveSystem(), platform);
-        initWhiteTileEntity(systemManager->getRenderSystem(), whiteTile);
-        initBallEntity(systemManager->getRenderSystem(), systemManager->getConstantXMoveSystem(),
-            systemManager->getreleaseBallSystem(), ball);
-
-        return entityManager;
+    static RenderNode* makeRenderNode(std::shared_ptr<Sprite> sprite, std::shared_ptr<Coord> coord, Size size)
+    {
+        return new RenderNode(std::move(sprite), std::move(coord), size);
     }
     
-private:
-    static void initPlatformEntity(RenderSystem& renderSystem, ConstantXMoveSystem& constantXMoveSystem, Platform* platform)
+    static Platform* makePlatformEntity(RenderNode& renderNode, ConstantXMoveNode& constantXMoveNode)
     {
-        renderSystem.addNode(*platform);
-        constantXMoveSystem.addNode(*platform);
+        return new Platform(renderNode, constantXMoveNode);
     }
 
-    static void initWhiteTileEntity(RenderSystem& renderSystem, WhiteTile* tile)
+    static Ball* makeBallEntity(ConstantXMoveNode& constantXMoveNode, ReleaseBallNode& releaseBallNode,
+        MoveBallNode& moveBallNode, RenderNode& renderNode, MouseTrackNode& mouseTrackNode)
     {
-        renderSystem.addNode(*tile);
+        return new Ball(constantXMoveNode, releaseBallNode, moveBallNode, renderNode, mouseTrackNode);
     }
 
-    static void initBallEntity(RenderSystem& renderSystem, ConstantXMoveSystem& constantXMoveSystem,
-        ReleaseBallSystem& releaseBallSystem, Ball* ball)
+    static WhiteTile* makeWhiteTitleEntity(RenderNode& renderNode)
     {
-        renderSystem.addNode(*ball);
-        constantXMoveSystem.addNode(*ball);
-        releaseBallSystem.addNode(*ball);
+        return new WhiteTile(renderNode);
+    }
+
+    static EntityManager* makeEntityManager(config::ConfigsHolder* configsHolder, SystemManager* systemManager)
+    {
+        auto platformConfig = configsHolder->getPlatformStartConfig();
+        auto adjPlatformConfig = config::ConfigResolutionAdjuster::adjustPlatformConfig(platformConfig);
+
+        auto platformCoord = std::make_shared<Coord>(Coord(adjPlatformConfig.posX, adjPlatformConfig.posY));
+        std::shared_ptr<Sprite> platformSprite(createSprite(adjPlatformConfig.spriteFilePath.c_str()));
+        
+        auto platformRenderNode = makeRenderNode(std::move(platformSprite),platformCoord,
+                Size(adjPlatformConfig.width, adjPlatformConfig.height));
+        
+        auto platformConstantXMoveNode = makeConstanXMoveNode(platformCoord,
+            std::make_shared<int>(adjPlatformConfig.moveDistance));
+        auto platform = makePlatformEntity(*platformRenderNode, *platformConstantXMoveNode);
+
+        
+        auto ballConfig = configsHolder->getBallStartConfig();
+        auto adjBallConfig = config::ConfigResolutionAdjuster::adjustBallConfig(ballConfig);
+        
+        auto ballCoord = std::make_shared<Coord>(Coord(adjBallConfig.posX, adjBallConfig.posY));
+        auto mouseCoord = std::make_shared<Coord>(Coord(0, 0));
+        auto ballSpeed = std::make_shared<Speed>(Speed(adjBallConfig.speedX, adjBallConfig.speedY));
+        std::shared_ptr<Sprite> ballSprite(createSprite(adjBallConfig.spriteFilePath.c_str()));
+        
+        auto constantBallMoveNode = makeConstanXMoveNode(ballCoord,
+            std::make_shared<int>(adjBallConfig.unreleasedMoveDistance));
+        auto releasedBallNode = makeReleaseBallNode(ballCoord, mouseCoord, ballSpeed,
+            std::make_shared<double>(adjBallConfig.baseSpeed));
+        auto moveBallNode = makeMoveBallNode(ballCoord, ballSpeed);
+        auto ballRenderNode = makeRenderNode(ballSprite,
+        ballCoord,
+        Size(adjBallConfig.width, adjBallConfig.height));
+        auto mouseTrackNode = makeMouseTrackNode(mouseCoord);
+        
+        auto ball = makeBallEntity(*constantBallMoveNode, *releasedBallNode,
+            *moveBallNode, *ballRenderNode, *mouseTrackNode);
+
+        
+        auto tileConfig = configsHolder->getWhiteTileStartConfig();
+        auto adjTileConfig = config::ConfigResolutionAdjuster::adjustWhiteTileConfig(tileConfig);
+
+        auto tileCoord = std::make_shared<Coord>(Coord(adjTileConfig.posX, adjTileConfig.posY));
+        std::shared_ptr<Sprite> tileSprite(createSprite(adjTileConfig.spriteFilePath.c_str()));
+        
+        auto tileRenderNode = makeRenderNode(tileSprite,
+            tileCoord, Size(adjTileConfig.width, adjTileConfig.height));
+        
+        auto whiteTile = makeWhiteTitleEntity(*tileRenderNode);
+
+        
+        auto entityManager = new EntityManager(platform, ball, whiteTile);
+
+        systemManager->getRenderSystem().addNode(*platformRenderNode);
+        systemManager->getConstantXMoveSystem().addNode(*platformConstantXMoveNode);
+
+        systemManager->getRenderSystem().addNode(*ballRenderNode);
+        systemManager->getConstantXMoveSystem().addNode(*constantBallMoveNode);
+        systemManager->getreleaseBallSystem().addNode(*releasedBallNode);
+
+        systemManager->getRenderSystem().addNode(*tileRenderNode);
+
+        return entityManager;
     }
 };

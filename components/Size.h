@@ -3,34 +3,34 @@
 
 class Size {
 public:
-	Size(int weigth, int heigth)
-		: weigth(weigth),
-		  heigth(heigth){}
+	Size(int width, int height)
+		: width(width),
+		  height(height){}
 
-	int getWeigth() {
-		return weigth;
+	int getWidth() {
+		return width;
 	}
 
 	int getHeigth() {
-		return heigth;
+		return height;
 	}
 
-	void setWeigth(int weigth)
+	void setWidth(int weigth)
 	{
-		this->weigth = weigth;
+		this->width = weigth;
 	}
 
 	void setHeigth(int heigth)
 	{
-		this->heigth = heigth;
+		this->height = heigth;
 	}
 
 	friend bool operator==(const Size& lhs, const Size& rhs)
 	{
-		return std::tie(lhs.weigth, lhs.heigth) == std::tie(rhs.weigth, rhs.heigth);
+		return std::tie(lhs.width, lhs.height) == std::tie(rhs.width, rhs.height);
 	}
 
 private:
-	int weigth;
-	int heigth;
+	int width;
+	int height;
 };

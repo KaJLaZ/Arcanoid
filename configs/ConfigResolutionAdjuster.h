@@ -39,12 +39,12 @@ namespace config
         
     private:
         template<class T>
-        static T adjustByWidthRes(T percentFromResolution)
+        static T adjustByWidthRes(T& percentFromResolution)
         {
             return percentFromResolution * ScreenResolution::WIDTH / 100;
         }
 
-        static int adjustByHeightRes(int percentFromResolution)
+        static int adjustByHeightRes(int& percentFromResolution)
         {
             return percentFromResolution * ScreenResolution::HEIGHT / 100;
         }

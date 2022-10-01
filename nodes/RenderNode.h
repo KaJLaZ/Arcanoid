@@ -6,18 +6,17 @@
 class RenderNode
 {
 public:
-    RenderNode(Sprite* sprite, Coord* coord, Size size)
-        : sprite(sprite),
-          coord(coord),
+    RenderNode(std::shared_ptr<Sprite> sprite, std::shared_ptr<Coord> coord, Size size)
+        : sprite(std::move(sprite)),
+          coord(std::move(coord)),
           size(size){}
 
-    Sprite* getSprite() const
+    std::shared_ptr<Sprite> getSprite() const
     {
         return sprite;
     }
-
-    //todo fix ambiqous it can be fixed inheritance from components
-    Coord* getRenderNodeCoord()
+    
+    std::shared_ptr<Coord> getCoord()
     {
         return coord;
     }
@@ -33,7 +32,7 @@ public:
     }
 
 private:
-    Sprite* sprite;
-    Coord* coord;
+    std::shared_ptr<Sprite> sprite;
+    std::shared_ptr<Coord> coord;
     Size size;
 };

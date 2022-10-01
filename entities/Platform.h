@@ -5,9 +5,23 @@
 #include "../nodes/ConstantXMoveNode.h"
 #include "../nodes/RenderNode.h"
 
-class Platform : public RenderNode, public ConstantXMoveNode {
+class Platform {
 public:
-    Platform(Sprite* sprite, Coord* coord, Size&& size, int moveDistance)
-        : RenderNode(sprite, coord, size),
-          ConstantXMoveNode(coord, moveDistance){}
+    Platform(RenderNode render_node, ConstantXMoveNode constant_x_move_node)
+        : renderNode(std::move(render_node)),
+          constantXMoveNode(std::move(constant_x_move_node)){}
+
+    [[nodiscard]] RenderNode& get_render_node()
+    {
+        return renderNode;
+    }
+
+    [[nodiscard]] ConstantXMoveNode& get_constant_x_move_node()
+    {
+        return constantXMoveNode;
+    }
+
+private:
+    RenderNode renderNode;
+    ConstantXMoveNode constantXMoveNode;
 };

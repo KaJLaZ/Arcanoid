@@ -24,12 +24,12 @@ public:
         std::for_each(nodes.begin(), nodes.end(),[] (DeflectNode* node)
         {
             double aX1 = node->getBallCord()->getX();
-            double aX2 = node->getBallCord()->getX() + node->getBallSize().getWeigth();
+            double aX2 = node->getBallCord()->getX() + node->getBallSize().getWidth();
             double aY1 = node->getBallCord()->getY();
             double aY2 = node->getBallCord()->getY() + node->getBallSize().getHeigth();
 
             double bX1 = node->getDeflectTargetCord()->getX();
-            double bX2 = node->getDeflectTargetCord()->getX() + node->getTargetSize().getWeigth();
+            double bX2 = node->getDeflectTargetCord()->getX() + node->getTargetSize().getWidth();
             double bY1 = node->getDeflectTargetCord()->getY();
             double bY2 = node->getDeflectTargetCord()->getY() + node->getTargetSize().getHeigth();
 

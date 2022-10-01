@@ -4,9 +4,17 @@
 #include "../components/Coord.h"
 #include "../components/Size.h"
 
-class WhiteTile : public RenderNode
+class WhiteTile
 {
 public:
-    WhiteTile(Sprite* sprite, Coord* coord, Size size, int* healthPoints)
-        : RenderNode(sprite, coord, std::move(size)){}
+    explicit WhiteTile(RenderNode render_node)
+        : renderNode(std::move(render_node)){}
+
+    RenderNode& get_render_node()
+    {
+        return renderNode;
+    }
+
+private:
+    RenderNode renderNode;
 };

@@ -10,28 +10,28 @@ public:
     {
         Tile, Platform, Border
     };
-    
-    DeflectNode(Coord* ballCord, Coord* targetCord,Speed* ballSpeed, Size ballSize,
-        Size targetSize, Target target, double baseSpeed)
-        : ballCord(ballCord),
-          targetCord(targetCord),
-          ballSpeed(ballSpeed),
-          ballSize(ballSize),
-          targetSize(targetSize),
-          target(target),
-          baseSpeed(baseSpeed){}
 
-    Coord* getBallCord()
+    DeflectNode(std::shared_ptr<Coord> ballCord, std::shared_ptr<Coord> targetCord, std::shared_ptr<Speed> ballSpeed,
+        Size ballSize, Size targetSize, Target target, std::shared_ptr<double> baseSpeed):
+        ballCord(std::move(ballCord)),
+        targetCord(std::move(targetCord)),
+        ballSpeed(std::move(ballSpeed)),
+        ballSize(ballSize),
+        targetSize(targetSize),
+        target(target),
+        baseSpeed(std::move(baseSpeed)){}
+
+    std::shared_ptr<Coord> getBallCord()
     {
         return ballCord;
     }
 
-    Coord* getDeflectTargetCord()
+    std::shared_ptr<Coord> getDeflectTargetCord()
     {
         return targetCord;
     }
 
-    Speed* getBallSpeed()
+    std::shared_ptr<Speed> getBallSpeed()
     {
         return ballSpeed;
     }
@@ -59,7 +59,7 @@ public:
 
     double getBaseSpeed()
     {
-        return baseSpeed;
+        return *baseSpeed;
     }
 
     friend bool operator==(const DeflectNode& lhs, const DeflectNode& rhs)
@@ -69,11 +69,11 @@ public:
     }
 
 private:
-    Coord* ballCord;
-    Coord* targetCord;
-    Speed* ballSpeed;
+    std::shared_ptr<Coord> ballCord;
+    std::shared_ptr<Coord> targetCord;
+    std::shared_ptr<Speed> ballSpeed;
     Size ballSize;
     Size targetSize;
     Target target;
-    double baseSpeed;
+    std::shared_ptr<double> baseSpeed;
 };

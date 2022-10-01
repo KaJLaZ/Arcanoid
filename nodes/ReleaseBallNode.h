@@ -5,23 +5,24 @@
 class ReleaseBallNode
 {
 public:
-    ReleaseBallNode(Coord* ballCoord, Coord* mouseCoord, Speed* ballSpeed, double baseSpeed)
-        : ballCoord(ballCoord),
-          mouseCoord(mouseCoord),
-          ballSpeed(ballSpeed),
-          baseSpeed(baseSpeed){}
+    ReleaseBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Coord> mouseCoord,
+        std::shared_ptr<Speed> ballSpeed, std::shared_ptr<double> baseSpeed)
+        : ballCoord(std::move(ballCoord)),
+          mouseCoord(std::move(mouseCoord)),
+          ballSpeed(std::move(ballSpeed)),
+          baseSpeed(std::move(baseSpeed)){}
 
-    Coord* getReleaseBallCoord()
+    std::shared_ptr<Coord> getReleaseBallCoord()
     {
         return ballCoord;
     }
 
-    Coord* getMouseCoord()
+    std::shared_ptr<Coord> getMouseCoord()
     {
         return mouseCoord;
     }
 
-    double getBaseSpeed()
+    std::shared_ptr<double> getBaseSpeed()
     {
         return baseSpeed;
     }
@@ -30,11 +31,12 @@ public:
     {
         this->ballSpeed->setX(x);
         this->ballSpeed->setY(y);
+        //*ballSpeed = Speed(x, y);
     }
 
 private:
-    Coord* ballCoord;
-    Coord* mouseCoord;
-    Speed* ballSpeed;
-    double baseSpeed;
+    std::shared_ptr<Coord> ballCoord;
+    std::shared_ptr<Coord> mouseCoord;
+    std::shared_ptr<Speed> ballSpeed;
+    std::shared_ptr<double> baseSpeed;
 };
