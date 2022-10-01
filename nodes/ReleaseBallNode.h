@@ -5,10 +5,10 @@
 class ReleaseBallNode
 {
 public:
-    ReleaseBallNode(Coord* ballCoord, Coord* mouseCoord, Speed* speed, double baseSpeed)
+    ReleaseBallNode(Coord* ballCoord, Coord* mouseCoord, Speed* ballSpeed, double baseSpeed)
         : ballCoord(ballCoord),
           mouseCoord(mouseCoord),
-          speed(speed),
+          ballSpeed(ballSpeed),
           baseSpeed(baseSpeed){}
 
     Coord* getReleaseBallCoord()
@@ -26,15 +26,15 @@ public:
         return baseSpeed;
     }
 
-    void setSpeed(double x, double y)
+    void setBallSpeed(double x, double y)
     {
-        this->speed->setX(x);
-        this->speed->setY(y);
+        this->ballSpeed->setX(x);
+        this->ballSpeed->setY(y);
     }
 
 private:
     Coord* ballCoord;
     Coord* mouseCoord;
-    Speed* speed;
+    Speed* ballSpeed;
     double baseSpeed;
 };
