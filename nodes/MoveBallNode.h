@@ -6,17 +6,16 @@ class MoveBallNode
 {
 public:
     MoveBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Speed> speed)
-        : ballCoord(std::move(ballCoord)),
-          speed(std::move(speed)){}
+        : ballCoord(std::move(ballCoord)), speed(std::move(speed)){}
 
-    std::shared_ptr<Coord> getCoord()
+    Coord getCoord()
     {
-        return ballCoord;
+        return *ballCoord;
     }
 
-    std::shared_ptr<Speed> getSpeed()
+    Speed getSpeed()
     {
-        return speed;
+        return *speed;
     }
 
     void shiftCoord(double x, double y)

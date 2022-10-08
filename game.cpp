@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "Framework.h"
 #include "configs/ConfigsHolder.h"
 #include "fabrics/EntitiesFabric.h"
@@ -5,7 +7,6 @@
 #include "managers/SystemManager.h"
 #include "utilities//ScreenResolution.h"
 #include "systems/DeflectSystem.h"
-#include "utilities/Crutch.h"
 
 class Arcanoid : public Framework {
 
@@ -13,6 +14,8 @@ public:
 	ScreenResolution* screenResolution;
 	SystemManager* systemManager;
 	EntityManager* entityManager;
+	bool initFlag = true;
+	bool releaseBallFlag = true;
 	
 	virtual void PreInit(int& width, int& height, bool& fullscreen)
 	{
@@ -27,10 +30,15 @@ public:
 	}
 
 	virtual bool Init() {
-		config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
-		systemManager = new SystemManager();
-		entityManager = EntitiesFabric::makeEntityManager(configs_holder, systemManager);
-		systemManager->getDeflectSystem().setSystemManager(systemManager);
+		//todo refactor
+		if(initFlag)
+		{
+			config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
+			systemManager = new SystemManager();
+			entityManager = EntitiesFabric::makeEntityManager(configs_holder, systemManager);
+			systemManager->getDeflectSystem().setSystemManager(systemManager);
+		}
+		initFlag = false;
 		
 		return true;
 	}
@@ -59,9 +67,14 @@ public:
 	}
 
 	virtual void onMouseButtonClick(FRMouseButton button, bool isReleased) {
-		if(button == FRMouseButton::LEFT && isReleased)
-		{	//todo fix speed boost bug
-			Crutch::afterBallRelleaseInitialization(systemManager, entityManager);
+		if(button == FRMouseButton::LEFT && isReleased && releaseBallFlag)
+		{	//todo refactor
+			Ball& ball = entityManager->getBall();
+			systemManager->getConstantXMoveSystem().removeNode(ball.get_constant_x_move_node());
+			systemManager->getreleaseBallSystem().process();
+			systemManager->getreleaseBallSystem().removeNodes();
+			systemManager->getMoveBallSystem().addNode(ball.get_move_ball_node());
+			releaseBallFlag = false;
 		}
 	}
 
@@ -84,31 +97,3 @@ int main(int argc, char* argv[])
 {
 	return run(new Arcanoid);
 }
-
-/*void createBorders(SystemManager* systemManager, EntityManager* entityManager)
-{
-	systemManager->getConstantXMoveSystem().removeNode(entityManager->getBall());
-	systemManager->getreleaseBallSystem().process();
-	systemManager->getreleaseBallSystem().removeNodes();
-	systemManager->getMoveBallSystem().addNode(entityManager->getBall());
-
-	auto titleHealthNode = new TileHealthNode(entityManager->getWhiteTile().getRenderNodeCoord(),
-		new int(1), &entityManager->getWhiteTile());
-	auto whiteTileDeflectNode = new DeflectNode(entityManager->getBall().getReleaseBallCoord(),
-		entityManager->getWhiteTile().getRenderNodeCoord(), entityManager->getBall().getBallSpeed(),
-		entityManager->getBall().getSize(), entityManager->getWhiteTile().getSize(),
-		DeflectNode::Target::Tile, entityManager->getBall().getBaseSpeed());
-	auto platformDeflectNode = new DeflectNode(entityManager->getBall().getReleaseBallCoord(),
-		entityManager->getPlatform().getRenderNodeCoord(), entityManager->getBall().getBallSpeed(),
-	entityManager->getBall().getSize(), entityManager->getPlatform().getSize(),
-	DeflectNode::Target::Platform, entityManager->getBall().getBaseSpeed());
-			
-	auto leftBorder = new DeflectNode(entityManager->getBall().getReleaseBallCoord(),
-		new Coord(0, 0), entityManager->getBall().getBallSpeed(),
-	entityManager->getBall().getSize(), Size(3,ScreenResolution::HEIGHT),
-	DeflectNode::Target::Border, entityManager->getBall().getBaseSpeed());
-
-	systemManager->getDeflectSystem().addNode(whiteTileDeflectNode);
-	systemManager->getDeflectSystem().addNode(platformDeflectNode);
-	systemManager->getDeflectSystem().addNode(leftBorder);
-}*/

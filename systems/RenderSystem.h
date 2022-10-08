@@ -16,7 +16,7 @@ public:
     {
         std::for_each(nodes.begin(), nodes.end(),[] (RenderNode& node)
         {
-            drawSprite(&*node.getSprite(), std::round(node.getCoord()->getX()), std::round(node.getCoord()->getY()));
+            drawSprite(&*node.getSprite(), std::round(node.getCoord().getX()), std::round(node.getCoord().getY()));
         });
     }
     

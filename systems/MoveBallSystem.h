@@ -16,7 +16,7 @@ public:
     {
         std::for_each(nodes.begin(), nodes.end(),[] (MoveBallNode& node)
         {
-            node.shiftCoord(node.getSpeed()->getX(), node.getSpeed()->getY());
+            node.shiftCoord(node.getSpeed().getX(), node.getSpeed().getY());
         });
     }
     

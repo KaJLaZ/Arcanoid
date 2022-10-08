@@ -8,11 +8,11 @@
 class Ball
 {
 public:
-    Ball(ConstantXMoveNode constant_x_move_node, ReleaseBallNode release_ball_node, MoveBallNode move_ball_node,
+    Ball(ConstantXMoveNode constantXMoveNode, ReleaseBallNode releaseBallNode, MoveBallNode moveBallNode,
         RenderNode render_node, MouseTrackNode mouse_track_node)
-        : constantXMoveNode(std::move(constant_x_move_node)),
-          releaseBallNode(std::move(release_ball_node)),
-          moveBallNode(std::move(move_ball_node)),
+        : constantXMoveNode(std::move(constantXMoveNode)),
+          releaseBallNode(std::move(releaseBallNode)),
+          moveBallNode(std::move(moveBallNode)),
           renderNode(std::move(render_node)),
           mouseTrackNode(std::move(mouse_track_node)){}
 

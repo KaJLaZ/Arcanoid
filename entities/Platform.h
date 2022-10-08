@@ -3,20 +3,22 @@
 #include "../components/Coord.h"
 #include "../components/Size.h"
 #include "../nodes/ConstantXMoveNode.h"
+#include "../nodes/DeflectNode.h"
 #include "../nodes/RenderNode.h"
 
 class Platform {
 public:
-    Platform(RenderNode render_node, ConstantXMoveNode constant_x_move_node)
-        : renderNode(std::move(render_node)),
-          constantXMoveNode(std::move(constant_x_move_node)){}
+    Platform(RenderNode renderNode, ConstantXMoveNode constantXMoveNode, DeflectNode deflectNode)
+        : renderNode(std::move(renderNode)),
+          constantXMoveNode(std::move(constantXMoveNode)),
+          deflectNode(std::move(deflectNode)){}
 
-    [[nodiscard]] RenderNode& get_render_node()
+    RenderNode& get_render_node()
     {
         return renderNode;
     }
 
-    [[nodiscard]] ConstantXMoveNode& get_constant_x_move_node()
+    ConstantXMoveNode& get_constant_x_move_node()
     {
         return constantXMoveNode;
     }
@@ -24,4 +26,5 @@ public:
 private:
     RenderNode renderNode;
     ConstantXMoveNode constantXMoveNode;
+    DeflectNode deflectNode;
 };

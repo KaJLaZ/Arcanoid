@@ -16,9 +16,9 @@ public:
         return sprite;
     }
     
-    std::shared_ptr<Coord> getCoord()
+    Coord getCoord()
     {
-        return coord;
+        return *coord;
     }
 
     Size getSize() const

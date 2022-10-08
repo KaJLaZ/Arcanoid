@@ -23,15 +23,15 @@ public:
     {
         std::for_each(nodes.begin(), nodes.end(),[] (DeflectNode* node)
         {
-            double aX1 = node->getBallCord()->getX();
-            double aX2 = node->getBallCord()->getX() + node->getBallSize().getWidth();
-            double aY1 = node->getBallCord()->getY();
-            double aY2 = node->getBallCord()->getY() + node->getBallSize().getHeigth();
+            double aX1 = node->getBallCord().getX();
+            double aX2 = node->getBallCord().getX() + node->getBallSize().getWidth();
+            double aY1 = node->getBallCord().getY();
+            double aY2 = node->getBallCord().getY() + node->getBallSize().getHeigth();
 
-            double bX1 = node->getDeflectTargetCord()->getX();
-            double bX2 = node->getDeflectTargetCord()->getX() + node->getTargetSize().getWidth();
-            double bY1 = node->getDeflectTargetCord()->getY();
-            double bY2 = node->getDeflectTargetCord()->getY() + node->getTargetSize().getHeigth();
+            double bX1 = node->getDeflectTargetCord().getX();
+            double bX2 = node->getDeflectTargetCord().getX() + node->getTargetSize().getWidth();
+            double bY1 = node->getDeflectTargetCord().getY();
+            double bY2 = node->getDeflectTargetCord().getY() + node->getTargetSize().getHeigth();
 
             bool isCollideAbove = Collider::isCollideAbove(aX1, aX2, aY1, aY2, bX1, bX2, bY1, bY2);
             bool isCollideBelow = Collider::isCollideBelow(aX1, aX2, aY1, aY2, bX1, bX2, bY1, bY2);
@@ -45,26 +45,17 @@ public:
             case 1:
                 if(isCollideAbove || isCollideBelow)
                 {
-                    node->setBallSpeed(node->getBallSpeed()->getX(), node->getBallSpeed()->getY() * -1);
+                    node->setBallSpeed(node->getBallSpeed().getX(), node->getBallSpeed().getY() * -1);
                 }
                 else
                 {
-                    node->setBallSpeed(node->getBallSpeed()->getX() * -1, node->getBallSpeed()->getY());
+                    node->setBallSpeed(node->getBallSpeed().getX() * -1, node->getBallSpeed().getY());
                 }
                 break;
             case 2:
-                node->setBallSpeed(node->getBallSpeed()->getX() * -1, node->getBallSpeed()->getY() * -1);
+                node->setBallSpeed(node->getBallSpeed().getX() * -1, node->getBallSpeed().getY() * -1);
                 break;
             }
-
-            //if(node->getTarget() == DeflectNode::Target::Platform)
-            //{
-            //   increaseSpeed(node->getBallSpeed()->getX(), node->getBallSpeed()->getY(), node->getBaseSpeed());
-            //}
-            //else
-            //{
-            //   decreaseSpeed(node->getBallSpeed()->getX(), node->getBallSpeed()->getY(), node->getBaseSpeed());
-            //}
         });
     }
     

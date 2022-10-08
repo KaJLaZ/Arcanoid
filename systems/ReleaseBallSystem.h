@@ -15,15 +15,15 @@ public:
     {
         std::ranges::for_each(nodes,[] (ReleaseBallNode& node)
         {
-            double difX = node.getMouseCoord()->getX() - node.getReleaseBallCoord()->getX();
-            double difY = node.getMouseCoord()->getY() - node.getReleaseBallCoord()->getY();
+            double difX = node.getMouseCoord().getX() - node.getReleaseBallCoord().getX();
+            double difY = node.getMouseCoord().getY() - node.getReleaseBallCoord().getY();
 
             double absSum = fabs(difX) + fabs(difY);
             
             double propX = difX / absSum;
             double propY = difY / absSum;
 
-            node.setBallSpeed(*node.getBaseSpeed() * propX, *node.getBaseSpeed() * propY);
+            node.setBallSpeed(node.getBaseSpeed() * propX, node.getBaseSpeed() * propY);
         });
     }
 

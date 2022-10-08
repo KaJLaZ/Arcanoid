@@ -7,9 +7,9 @@ public:
     explicit ConstantXMoveNode(std::shared_ptr<Coord> coord, std::shared_ptr<int> moveDistance)
         : coord(std::move(coord)), moveDistance(std::move(moveDistance)){}
 
-    std::shared_ptr<Coord> getCoord()
+    Coord getCoord()
     {
-        return coord;
+        return *coord;
     }
 
     void shiftCoord(double x, double y)

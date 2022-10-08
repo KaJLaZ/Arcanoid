@@ -12,26 +12,25 @@ public:
           ballSpeed(std::move(ballSpeed)),
           baseSpeed(std::move(baseSpeed)){}
 
-    std::shared_ptr<Coord> getReleaseBallCoord()
+    Coord getReleaseBallCoord()
     {
-        return ballCoord;
+        return *ballCoord;
     }
 
-    std::shared_ptr<Coord> getMouseCoord()
+    Coord getMouseCoord()
     {
-        return mouseCoord;
+        return *mouseCoord;
     }
 
-    std::shared_ptr<double> getBaseSpeed()
+    double getBaseSpeed()
     {
-        return baseSpeed;
+        return *baseSpeed;
     }
 
     void setBallSpeed(double x, double y)
     {
         this->ballSpeed->setX(x);
         this->ballSpeed->setY(y);
-        //*ballSpeed = Speed(x, y);
     }
 
 private:

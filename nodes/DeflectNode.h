@@ -6,34 +6,27 @@
 class DeflectNode
 {
 public:
-    enum class Target
-    {
-        Tile, Platform, Border
-    };
-
     DeflectNode(std::shared_ptr<Coord> ballCord, std::shared_ptr<Coord> targetCord, std::shared_ptr<Speed> ballSpeed,
-        Size ballSize, Size targetSize, Target target, std::shared_ptr<double> baseSpeed):
+        Size ballSize, Size targetSize):
         ballCord(std::move(ballCord)),
         targetCord(std::move(targetCord)),
         ballSpeed(std::move(ballSpeed)),
         ballSize(ballSize),
-        targetSize(targetSize),
-        target(target),
-        baseSpeed(std::move(baseSpeed)){}
+        targetSize(targetSize){}
 
-    std::shared_ptr<Coord> getBallCord()
+    Coord getBallCord()
     {
-        return ballCord;
+        return *ballCord;
     }
 
-    std::shared_ptr<Coord> getDeflectTargetCord()
+    Coord getDeflectTargetCord()
     {
-        return targetCord;
+        return *targetCord;
     }
 
-    std::shared_ptr<Speed> getBallSpeed()
+    Speed getBallSpeed()
     {
-        return ballSpeed;
+        return *ballSpeed;
     }
 
     void setBallSpeed(double x, double y)
@@ -52,16 +45,6 @@ public:
         return targetSize;
     }
 
-    Target getTarget()
-    {
-        return target;
-    }
-
-    double getBaseSpeed()
-    {
-        return *baseSpeed;
-    }
-
     friend bool operator==(const DeflectNode& lhs, const DeflectNode& rhs)
     {
         return std::tie(lhs.ballCord, lhs.targetCord, lhs.ballSpeed, lhs.ballSize, lhs.targetSize) == std::tie(
@@ -74,6 +57,4 @@ private:
     std::shared_ptr<Speed> ballSpeed;
     Size ballSize;
     Size targetSize;
-    Target target;
-    std::shared_ptr<double> baseSpeed;
 };

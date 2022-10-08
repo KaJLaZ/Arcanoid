@@ -7,8 +7,9 @@
 class WhiteTile
 {
 public:
-    explicit WhiteTile(RenderNode render_node)
-        : renderNode(std::move(render_node)){}
+    explicit WhiteTile(RenderNode renderNode, DeflectNode deflectNode)
+        : renderNode(std::move(renderNode)),
+          deflectNode(deflectNode){}
 
     RenderNode& get_render_node()
     {
@@ -17,4 +18,5 @@ public:
 
 private:
     RenderNode renderNode;
+    DeflectNode deflectNode;
 };
