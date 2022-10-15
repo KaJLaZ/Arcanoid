@@ -4,16 +4,9 @@
 #include "../nodes/DeflectNode.h"
 #include "../utilities/Collider.h"
 
-class SystemManager;
-
 class DeflectSystem
 {
 public:
-    void setSystemManager(SystemManager* systemManager)
-    {
-        this->systemManager = systemManager;
-    }
-
     void addNode(DeflectNode* node)
     {
         nodes.emplace_back(node);
@@ -60,7 +53,6 @@ public:
     }
     
 private:
-    SystemManager* systemManager;
     std::vector<DeflectNode*> nodes;
 
     static void increaseSpeed(double& speedX, double& speedY, double baseSpeed)

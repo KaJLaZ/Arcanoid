@@ -1,22 +1,28 @@
 #pragma once
 
-#include "../Framework.h"
-#include "../components/Coord.h"
-#include "../components/Size.h"
+#include "../nodes/RenderNode.h"
+#include "../nodes/DeflectNode.h"
 
 class WhiteTile
 {
 public:
-    explicit WhiteTile(RenderNode renderNode, DeflectNode deflectNode)
-        : renderNode(std::move(renderNode)),
-          deflectNode(deflectNode){}
+    explicit WhiteTile(std::string uuid, RenderNode renderNode, DeflectNode deflectNode)
+        : uuid(std::move(uuid)),
+          renderNode(std::move(renderNode)),
+          deflectNode(std::move(deflectNode)){}
 
-    RenderNode& get_render_node()
+    std::string getUUID()
+    {
+        return uuid;
+    }
+
+    RenderNode& getRenderNode()
     {
         return renderNode;
     }
 
 private:
+    std::string uuid;
     RenderNode renderNode;
     DeflectNode deflectNode;
 };

@@ -5,8 +5,8 @@
 class EntityManager
 {
 public:
-    EntityManager(Platform* platform, Ball* ball, WhiteTile* whiteTile,
-        WhiteTile* leftBorderTile, WhiteTile* topBorderTile, WhiteTile* rightBorderTile)
+    EntityManager(Platform platform, Ball ball, WhiteTile whiteTile,
+        WhiteTile leftBorderTile, WhiteTile topBorderTile, WhiteTile rightBorderTile)
         : platform(std::move(platform)),
         ball(std::move(ball)),
         whiteTile(std::move(whiteTile)),
@@ -16,26 +16,27 @@ public:
 
     Platform& getPlatform()
     {
-        return *platform;
+        return platform;
     }
 
     Ball& getBall()
     {
-        return *ball;
+        return ball;
     }
 
     WhiteTile& getWhiteTile()
     {
-        return *whiteTile;
+        return whiteTile;
     }
 
 private:
-    Platform* platform;
-    Ball* ball;
-    WhiteTile* whiteTile;
-    WhiteTile* leftBorderTile;
-    WhiteTile* topBorderTile;
-    WhiteTile* rightBorderTile;
+    //add id and list for entities
+    Platform platform;
+    Ball ball;
+    WhiteTile whiteTile;
+    WhiteTile leftBorderTile;
+    WhiteTile topBorderTile;
+    WhiteTile rightBorderTile;
 };
 
 //TODO think about adding new service that will be correct config by resolution 

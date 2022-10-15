@@ -1,29 +1,34 @@
 #pragma once
-#include "../Framework.h"
-#include "../components/Coord.h"
-#include "../components/Size.h"
+
 #include "../nodes/ConstantXMoveNode.h"
 #include "../nodes/DeflectNode.h"
 #include "../nodes/RenderNode.h"
 
 class Platform {
 public:
-    Platform(RenderNode renderNode, ConstantXMoveNode constantXMoveNode, DeflectNode deflectNode)
-        : renderNode(std::move(renderNode)),
+    Platform(std::string uuid, RenderNode renderNode, ConstantXMoveNode constantXMoveNode, DeflectNode deflectNode)
+        : uuid(std::move(uuid)),
+          renderNode(std::move(renderNode)),
           constantXMoveNode(std::move(constantXMoveNode)),
           deflectNode(std::move(deflectNode)){}
 
-    RenderNode& get_render_node()
+    std::string getUUID()
+    {
+        return uuid;
+    }
+    
+    RenderNode& getRenderNode()
     {
         return renderNode;
     }
 
-    ConstantXMoveNode& get_constant_x_move_node()
+    ConstantXMoveNode& getConstantXMoveNode()
     {
         return constantXMoveNode;
     }
 
 private:
+    std::string uuid;
     RenderNode renderNode;
     ConstantXMoveNode constantXMoveNode;
     DeflectNode deflectNode;

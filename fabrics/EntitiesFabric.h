@@ -11,6 +11,7 @@
 #include "../systems/MoveBallSystem.h"
 #include "../systems/ReleaseBallSystem.h"
 #include "../systems/RenderSystem.h"
+#include "../utilities/UUID.h"
 
 class EntitiesFabric
 {
@@ -47,20 +48,20 @@ public:
         return new RenderNode(std::move(sprite), std::move(coord), size);
     }
     
-    static Platform* makePlatformEntity(RenderNode& renderNode, ConstantXMoveNode& constantXMoveNode, DeflectNode deflectNode)
+    static Platform* makePlatformEntity(std::string uuid, RenderNode& renderNode, ConstantXMoveNode& constantXMoveNode, DeflectNode deflectNode)
     {
-        return new Platform(renderNode, constantXMoveNode, deflectNode);
+        return new Platform(uuid, renderNode, constantXMoveNode, deflectNode);
     }
 
-    static Ball* makeBallEntity(ConstantXMoveNode& constantXMoveNode, ReleaseBallNode& releaseBallNode,
+    static Ball* makeBallEntity(std::string uuid, ConstantXMoveNode& constantXMoveNode, ReleaseBallNode& releaseBallNode,
         MoveBallNode& moveBallNode, RenderNode& renderNode, MouseTrackNode& mouseTrackNode)
     {
-        return new Ball(constantXMoveNode, releaseBallNode, moveBallNode, renderNode, mouseTrackNode);
+        return new Ball(uuid, constantXMoveNode, releaseBallNode, moveBallNode, renderNode, mouseTrackNode);
     }
 
-    static WhiteTile* makeWhiteTitleEntity(RenderNode& renderNode, DeflectNode& deflectNode)
+    static WhiteTile* makeWhiteTitleEntity(std::string uuid, RenderNode& renderNode, DeflectNode& deflectNode)
     {
-        return new WhiteTile(renderNode, deflectNode);
+        return new WhiteTile(uuid, renderNode, deflectNode);
     }
 
     static EntityManager* makeEntityManager(config::ConfigsHolder* configsHolder, SystemManager* systemManager)
@@ -128,16 +129,16 @@ public:
             ballSpeed, ballSize, rightBorderTileSize);
 
 
-        auto ball = makeBallEntity(*constantBallMoveNode, *releasedBallNode,
+        auto ball = makeBallEntity(UUID::generate(), *constantBallMoveNode, *releasedBallNode,
             *moveBallNode, *ballRenderNode, *mouseTrackNode);
-        auto platform = makePlatformEntity(*platformRenderNode, *platformConstantXMoveNode, *platformDeflectNode);
-        auto whiteTile = makeWhiteTitleEntity(*tileRenderNode, *whiteTileDeflectNode);
-        auto leftBorderTile = makeWhiteTitleEntity(*leftBorderTileRenderNode, *leftBorderTileDeflectNode);
-        auto topBorderTile = makeWhiteTitleEntity(*topBorderTileRenderNode, *topBorderTileDeflectNode);
-        auto rightBorderTile = makeWhiteTitleEntity(*rightBorderTileRenderNode, *rightBorderTileDeflectNode);
+        auto platform = makePlatformEntity(UUID::generate(), *platformRenderNode, *platformConstantXMoveNode, *platformDeflectNode);
+        auto whiteTile = makeWhiteTitleEntity(UUID::generate(), *tileRenderNode, *whiteTileDeflectNode);
+        auto leftBorderTile = makeWhiteTitleEntity(UUID::generate(), *leftBorderTileRenderNode, *leftBorderTileDeflectNode);
+        auto topBorderTile = makeWhiteTitleEntity(UUID::generate(), *topBorderTileRenderNode, *topBorderTileDeflectNode);
+        auto rightBorderTile = makeWhiteTitleEntity(UUID::generate(), *rightBorderTileRenderNode, *rightBorderTileDeflectNode);
 
         
-        auto entityManager = new EntityManager(platform, ball, whiteTile, leftBorderTile, topBorderTile, rightBorderTile);
+        auto entityManager = new EntityManager(*platform, *ball, *whiteTile, *leftBorderTile, *topBorderTile, *rightBorderTile);
 
         systemManager->getRenderSystem().addNode(*platformRenderNode);
         systemManager->getRenderSystem().addNode(*ballRenderNode);

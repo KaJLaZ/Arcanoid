@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../json.hpp"
+#include <../include/json.hpp>
+
 using nlohmann::json;
 
 //TODO rename prefix Start from all configs

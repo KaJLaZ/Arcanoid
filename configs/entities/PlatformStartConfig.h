@@ -1,5 +1,7 @@
 #pragma once
-#include "../../json.hpp"
+
+#include <../include/json.hpp>
+
 using nlohmann::json;
 
 namespace config {

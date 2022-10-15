@@ -1,6 +1,6 @@
 #pragma once
 #include <fstream>
-#include "../../json.hpp"
+#include "../dependency/include/json.hpp"
 
 using nlohmann::json;
 
