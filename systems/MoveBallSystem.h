@@ -1,25 +1,24 @@
 #pragma once
 
 #include <algorithm>
-#include <vector>
 #include "../nodes/MoveBallNode.h"
 
 class MoveBallSystem
 {
 public:
-    void addNode(MoveBallNode& node)
+    void addNode(std::string&& uuid, MoveBallNode& node)
     {
-        nodes.emplace_back(node);
+        nodes.emplace(std::make_pair(uuid, node));
     }
     
     void process()
     {
-        std::for_each(nodes.begin(), nodes.end(),[] (MoveBallNode& node)
+        std::ranges::for_each(nodes,[] (std::pair<const std::string, MoveBallNode>& pair)
         {
-            node.shiftCoord(node.getSpeed().getX(), node.getSpeed().getY());
+            pair.second.shiftCoord(pair.second.getSpeed().getX(), pair.second.getSpeed().getY());
         });
     }
     
 private:
-    std::vector<MoveBallNode> nodes;
+    std::unordered_map<std::string, MoveBallNode> nodes;
 };

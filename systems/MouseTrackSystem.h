@@ -5,8 +5,19 @@
 class MouseTrackSystem
 {
 public:
-    void process(MouseTrackNode& trackNode, double x, double y)
+    void addNode(std::string&& uuid, MouseTrackNode& node)
     {
-        trackNode.setMouseCoord(x, y);
+        nodes.emplace(std::make_pair(uuid, node));
     }
+    
+    void process(double x, double y)
+    {
+        std::ranges::for_each(nodes, [&](std::pair<const std::string, MouseTrackNode>& pair)
+        {
+            pair.second.setMouseCoord(x, y);
+        });
+    }
+
+private:
+    std::unordered_map<std::string, MouseTrackNode> nodes;
 };

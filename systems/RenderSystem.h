@@ -1,30 +1,30 @@
 #pragma once
 #include <algorithm>
-#include <vector>
 #include "../nodes/RenderNode.h"
 
 class RenderSystem
 {
 public:
-    void addNode(RenderNode& node)
+    void addNode(std::string&& uuid, RenderNode& node)
     {
         setSpriteSize(&*node.getSprite(), node.getSize().getWidth(), node.getSize().getHeigth());
-        nodes.emplace_back(node);
+        nodes.emplace(std::make_pair(uuid, node));
     }
     
     void process()
     {
-        std::for_each(nodes.begin(), nodes.end(),[] (RenderNode& node)
+        std::ranges::for_each(nodes,[] (std::pair<const std::string, RenderNode> pair)
         {
-            drawSprite(&*node.getSprite(), std::round(node.getCoord().getX()), std::round(node.getCoord().getY()));
+            drawSprite(&*pair.second.getSprite(),
+                       std::round(pair.second.getCoord().getX()), std::round(pair.second.getCoord().getY()));
         });
     }
     
-    void removeNode(RenderNode& node)
+    void removeNode(std::string key)
     {
-        nodes.erase(std::ranges::remove(nodes, node).begin(), nodes.end());
+        nodes.erase(key);
     }
     
 private:
-    std::vector<RenderNode> nodes;
+    std::unordered_map<std::string, RenderNode> nodes;
 };

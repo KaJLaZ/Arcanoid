@@ -6,32 +6,32 @@
 class ReleaseBallSystem
 {
 public:
-    void addNode(ReleaseBallNode& node)
+    void addNode(std::string&& uuid, ReleaseBallNode& node)
     {
-        nodes.emplace_back(node);
+        nodes.emplace(std::make_pair(uuid, node));
     }
     
     void process()
     {
-        std::ranges::for_each(nodes,[] (ReleaseBallNode& node)
+        std::ranges::for_each(nodes, [](std::pair<const std::string, ReleaseBallNode> pair)
         {
-            double difX = node.getMouseCoord().getX() - node.getReleaseBallCoord().getX();
-            double difY = node.getMouseCoord().getY() - node.getReleaseBallCoord().getY();
+            double difX = pair.second.getMouseCoord().getX() - pair.second.getReleaseBallCoord().getX();
+            double difY = pair.second.getMouseCoord().getY() - pair.second.getReleaseBallCoord().getY();
 
             double absSum = fabs(difX) + fabs(difY);
             
             double propX = difX / absSum;
             double propY = difY / absSum;
 
-            node.setBallSpeed(node.getBaseSpeed() * propX, node.getBaseSpeed() * propY);
+            pair.second.setBallSpeed(pair.second.getBaseSpeed() * propX, pair.second.getBaseSpeed() * propY);
         });
     }
 
-    void removeNodes()
+    void removeNode(std::string key)
     {
-        nodes.clear();
+        nodes.erase(key);
     }
 
 private:
-    std::vector<ReleaseBallNode> nodes;
+    std::unordered_map<std::string, ReleaseBallNode> nodes;
 };

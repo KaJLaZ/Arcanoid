@@ -16,55 +16,56 @@
 class EntitiesFabric
 {
 public:
-    static ConstantXMoveNode* makeConstanXMoveNode(std::shared_ptr<Coord> coord, std::shared_ptr<int> moveDistance)
+    static ConstantXMoveNode makeConstantXMoveNode(std::shared_ptr<Coord> coord, std::shared_ptr<int> moveDistance)
     {
-        return new ConstantXMoveNode(std::move(coord), std::move(moveDistance));
+        return {std::move(coord), std::move(moveDistance)};
     }
 
-    static DeflectNode* makeDeflectNode(std::shared_ptr<Coord> ballCord, std::shared_ptr<Coord> targetCord,
+    static DeflectNode makeDeflectNode(std::shared_ptr<Coord> ballCord, std::shared_ptr<Coord> targetCord,
         std::shared_ptr<Speed> ballSpeed, Size ballSize, Size targetSize)
     {
-        return new DeflectNode(std::move(ballCord), std::move(targetCord), std::move(ballSpeed), ballSize, targetSize);
+        return {std::move(ballCord), std::move(targetCord), std::move(ballSpeed), ballSize, targetSize};
     }
 
-    static MouseTrackNode* makeMouseTrackNode(std::shared_ptr<Coord> mouseCoord)
+    static MouseTrackNode makeMouseTrackNode(std::shared_ptr<Coord> mouseCoord)
     {
-        return new MouseTrackNode(std::move(mouseCoord));
+        return {std::move(mouseCoord)};
     }
 
-    static MoveBallNode* makeMoveBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Speed> speed)
+    static MoveBallNode makeMoveBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Speed> speed)
     {
-        return new MoveBallNode(std::move(ballCoord), std::move(speed));
+        return {std::move(ballCoord), std::move(speed)};
     }
 
-    static ReleaseBallNode* makeReleaseBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Coord> mouseCoord,
+    static ReleaseBallNode makeReleaseBallNode(std::shared_ptr<Coord> ballCoord, std::shared_ptr<Coord> mouseCoord,
         std::shared_ptr<Speed> ballSpeed, std::shared_ptr<double> baseSpeed)
     {
-        return new ReleaseBallNode(std::move(ballCoord), std::move(mouseCoord), std::move(ballSpeed), std::move(baseSpeed));
+        return {std::move(ballCoord), std::move(mouseCoord), std::move(ballSpeed), std::move(baseSpeed)};
     }
 
-    static RenderNode* makeRenderNode(std::shared_ptr<Sprite> sprite, std::shared_ptr<Coord> coord, Size size)
+    static RenderNode makeRenderNode(std::shared_ptr<Sprite> sprite, std::shared_ptr<Coord> coord, Size size)
     {
-        return new RenderNode(std::move(sprite), std::move(coord), size);
+        return {std::move(sprite), std::move(coord), size};
     }
     
-    static Platform* makePlatformEntity(std::string uuid, RenderNode& renderNode, ConstantXMoveNode& constantXMoveNode, DeflectNode deflectNode)
+    static Platform makePlatformEntity(std::string uuid, RenderNode renderNode, ConstantXMoveNode constantXMoveNode, DeflectNode deflectNode)
     {
-        return new Platform(uuid, renderNode, constantXMoveNode, deflectNode);
+        return {std::move(uuid), std::move(renderNode), std::move(constantXMoveNode), std::move(deflectNode)};
     }
 
-    static Ball* makeBallEntity(std::string uuid, ConstantXMoveNode& constantXMoveNode, ReleaseBallNode& releaseBallNode,
-        MoveBallNode& moveBallNode, RenderNode& renderNode, MouseTrackNode& mouseTrackNode)
+    static Ball makeBallEntity(std::string uuid, ConstantXMoveNode constantXMoveNode, ReleaseBallNode releaseBallNode,
+        MoveBallNode moveBallNode, RenderNode renderNode, MouseTrackNode mouseTrackNode)
     {
-        return new Ball(uuid, constantXMoveNode, releaseBallNode, moveBallNode, renderNode, mouseTrackNode);
+        return {std::move(uuid), std::move(constantXMoveNode), std::move(releaseBallNode),
+            std::move(moveBallNode), std::move(renderNode), std::move(mouseTrackNode)};
     }
 
-    static WhiteTile* makeWhiteTitleEntity(std::string uuid, RenderNode& renderNode, DeflectNode& deflectNode)
+    static WhiteTile makeWhiteTitleEntity(std::string uuid, RenderNode renderNode, DeflectNode deflectNode)
     {
-        return new WhiteTile(uuid, renderNode, deflectNode);
+        return {std::move(uuid), std::move(renderNode), std::move(deflectNode)};
     }
 
-    static EntityManager* makeEntityManager(config::ConfigsHolder* configsHolder, SystemManager* systemManager)
+    static EntityManager makeEntityManager(config::ConfigsHolder* configsHolder, SystemManager* systemManager)
     {
         auto platformConfig = configsHolder->getPlatformStartConfig();
         auto adjPlatformConfig = config::ConfigResolutionAdjuster::adjustPlatformConfig(platformConfig);
@@ -101,16 +102,16 @@ public:
         std::shared_ptr<Sprite> rightBorderTileSprite(createSprite(adjTileConfig.spriteFilePath.c_str()));
 
 
-        auto platformRenderNode = makeRenderNode(std::move(platformSprite),platformCoord, platformSize);
+        auto platformRenderNode = makeRenderNode(platformSprite,platformCoord, platformSize);
         auto ballRenderNode = makeRenderNode(ballSprite, ballCoord, ballSize);
         auto tileRenderNode = makeRenderNode(tileSprite, tileCoord, tileSize);
         auto leftBorderTileRenderNode = makeRenderNode(leftBorderTileSprite, leftBorderTileCoord, leftBorderTileSize);
         auto topBorderTileRenderNode = makeRenderNode(topBorderTileSprite, topBorderTileCoord, topBorderTileSize);
         auto rightBorderTileRenderNode = makeRenderNode(rightBorderTileSprite, rightBorderTileCoord, rightBorderTileSize);
 
-        auto constantBallMoveNode = makeConstanXMoveNode(ballCoord,
+        auto constantBallMoveNode = makeConstantXMoveNode(ballCoord,
             std::make_shared<int>(adjBallConfig.unreleasedMoveDistance));
-        auto platformConstantXMoveNode = makeConstanXMoveNode(platformCoord,
+        auto platformConstantXMoveNode = makeConstantXMoveNode(platformCoord,
             std::make_shared<int>(adjPlatformConfig.moveDistance));
         
         auto moveBallNode = makeMoveBallNode(ballCoord, ballSpeed);
@@ -129,34 +130,35 @@ public:
             ballSpeed, ballSize, rightBorderTileSize);
 
 
-        auto ball = makeBallEntity(UUID::generate(), *constantBallMoveNode, *releasedBallNode,
-            *moveBallNode, *ballRenderNode, *mouseTrackNode);
-        auto platform = makePlatformEntity(UUID::generate(), *platformRenderNode, *platformConstantXMoveNode, *platformDeflectNode);
-        auto whiteTile = makeWhiteTitleEntity(UUID::generate(), *tileRenderNode, *whiteTileDeflectNode);
-        auto leftBorderTile = makeWhiteTitleEntity(UUID::generate(), *leftBorderTileRenderNode, *leftBorderTileDeflectNode);
-        auto topBorderTile = makeWhiteTitleEntity(UUID::generate(), *topBorderTileRenderNode, *topBorderTileDeflectNode);
-        auto rightBorderTile = makeWhiteTitleEntity(UUID::generate(), *rightBorderTileRenderNode, *rightBorderTileDeflectNode);
+        auto ball = makeBallEntity(UUID::generate(), constantBallMoveNode, releasedBallNode,
+            moveBallNode, ballRenderNode, mouseTrackNode);
+        auto platform = makePlatformEntity(UUID::generate(), platformRenderNode, platformConstantXMoveNode, platformDeflectNode);
+        auto whiteTile = makeWhiteTitleEntity(UUID::generate(), tileRenderNode, whiteTileDeflectNode);
+        auto leftBorderTile = makeWhiteTitleEntity(UUID::generate(), leftBorderTileRenderNode, leftBorderTileDeflectNode);
+        auto topBorderTile = makeWhiteTitleEntity(UUID::generate(), topBorderTileRenderNode, topBorderTileDeflectNode);
+        auto rightBorderTile = makeWhiteTitleEntity(UUID::generate(), rightBorderTileRenderNode, rightBorderTileDeflectNode);
 
         
-        auto entityManager = new EntityManager(*platform, *ball, *whiteTile, *leftBorderTile, *topBorderTile, *rightBorderTile);
+        EntityManager entityManager(platform, ball, whiteTile, leftBorderTile, topBorderTile, rightBorderTile);
 
-        systemManager->getRenderSystem().addNode(*platformRenderNode);
-        systemManager->getRenderSystem().addNode(*ballRenderNode);
-        systemManager->getRenderSystem().addNode(*tileRenderNode);
-        systemManager->getRenderSystem().addNode(*leftBorderTileRenderNode);
-        systemManager->getRenderSystem().addNode(*topBorderTileRenderNode);
-        systemManager->getRenderSystem().addNode(*rightBorderTileRenderNode);
+        systemManager->getreleaseBallSystem().addNode(ball.getUUID(), releasedBallNode);
+        systemManager->getMouseTrackSystem().addNode(ball.getUUID(), mouseTrackNode);
         
-        systemManager->getConstantXMoveSystem().addNode(*platformConstantXMoveNode);
-        systemManager->getConstantXMoveSystem().addNode(*constantBallMoveNode);
+        systemManager->getRenderSystem().addNode(platform.getUUID(), platformRenderNode);
+        systemManager->getRenderSystem().addNode(ball.getUUID(), ballRenderNode);
+        systemManager->getRenderSystem().addNode(whiteTile.getUUID(), tileRenderNode);
+        systemManager->getRenderSystem().addNode(leftBorderTile.getUUID(), leftBorderTileRenderNode);
+        systemManager->getRenderSystem().addNode(topBorderTile.getUUID(), topBorderTileRenderNode);
+        systemManager->getRenderSystem().addNode(rightBorderTile.getUUID(), rightBorderTileRenderNode);
         
-        systemManager->getreleaseBallSystem().addNode(*releasedBallNode);
+        systemManager->getConstantXMoveSystem().addNode(platform.getUUID(), platformConstantXMoveNode);
+        systemManager->getConstantXMoveSystem().addNode(ball.getUUID(), constantBallMoveNode);
 
-        systemManager->getDeflectSystem().addNode(platformDeflectNode);
-        systemManager->getDeflectSystem().addNode(whiteTileDeflectNode);
-        systemManager->getDeflectSystem().addNode(leftBorderTileDeflectNode);
-        systemManager->getDeflectSystem().addNode(topBorderTileDeflectNode);
-        systemManager->getDeflectSystem().addNode(rightBorderTileDeflectNode);
+        systemManager->getDeflectSystem().addNode(platform.getUUID(), platformDeflectNode);
+        systemManager->getDeflectSystem().addNode(whiteTile.getUUID(), whiteTileDeflectNode);
+        systemManager->getDeflectSystem().addNode(leftBorderTile.getUUID(), leftBorderTileDeflectNode);
+        systemManager->getDeflectSystem().addNode(topBorderTile.getUUID(), topBorderTileDeflectNode);
+        systemManager->getDeflectSystem().addNode(rightBorderTile.getUUID(), rightBorderTileDeflectNode);
 
         return entityManager;
     }

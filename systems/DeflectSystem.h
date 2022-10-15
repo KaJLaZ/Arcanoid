@@ -1,30 +1,29 @@
 #pragma once
 #include <algorithm>
-#include <vector>
 #include "../nodes/DeflectNode.h"
 #include "../utilities/Collider.h"
 
 class DeflectSystem
 {
 public:
-    void addNode(DeflectNode* node)
+    void addNode(std::string&& uuid, DeflectNode& node)
     {
-        nodes.emplace_back(node);
+        nodes.emplace(std::make_pair(uuid, node));
     }
     
     void process()
     {
-        std::for_each(nodes.begin(), nodes.end(),[] (DeflectNode* node)
+        std::ranges::for_each(nodes,[] (std::pair<const std::string, DeflectNode> pair)
         {
-            double aX1 = node->getBallCord().getX();
-            double aX2 = node->getBallCord().getX() + node->getBallSize().getWidth();
-            double aY1 = node->getBallCord().getY();
-            double aY2 = node->getBallCord().getY() + node->getBallSize().getHeigth();
+            double aX1 = pair.second.getBallCord().getX();
+            double aX2 = pair.second.getBallCord().getX() + pair.second.getBallSize().getWidth();
+            double aY1 = pair.second.getBallCord().getY();
+            double aY2 = pair.second.getBallCord().getY() +pair.second.getBallSize().getHeigth();
 
-            double bX1 = node->getDeflectTargetCord().getX();
-            double bX2 = node->getDeflectTargetCord().getX() + node->getTargetSize().getWidth();
-            double bY1 = node->getDeflectTargetCord().getY();
-            double bY2 = node->getDeflectTargetCord().getY() + node->getTargetSize().getHeigth();
+            double bX1 = pair.second.getDeflectTargetCord().getX();
+            double bX2 = pair.second.getDeflectTargetCord().getX() + pair.second.getTargetSize().getWidth();
+            double bY1 = pair.second.getDeflectTargetCord().getY();
+            double bY2 = pair.second.getDeflectTargetCord().getY() + pair.second.getTargetSize().getHeigth();
 
             bool isCollideAbove = Collider::isCollideAbove(aX1, aX2, aY1, aY2, bX1, bX2, bY1, bY2);
             bool isCollideBelow = Collider::isCollideBelow(aX1, aX2, aY1, aY2, bX1, bX2, bY1, bY2);
@@ -38,22 +37,22 @@ public:
             case 1:
                 if(isCollideAbove || isCollideBelow)
                 {
-                    node->setBallSpeed(node->getBallSpeed().getX(), node->getBallSpeed().getY() * -1);
+                    pair.second.setBallSpeed(pair.second.getBallSpeed().getX(), pair.second.getBallSpeed().getY() * -1);
                 }
                 else
                 {
-                    node->setBallSpeed(node->getBallSpeed().getX() * -1, node->getBallSpeed().getY());
+                    pair.second.setBallSpeed(pair.second.getBallSpeed().getX() * -1, pair.second.getBallSpeed().getY());
                 }
                 break;
             case 2:
-                node->setBallSpeed(node->getBallSpeed().getX() * -1, node->getBallSpeed().getY() * -1);
+                pair.second.setBallSpeed(pair.second.getBallSpeed().getX() * -1, pair.second.getBallSpeed().getY() * -1);
                 break;
             }
         });
     }
     
 private:
-    std::vector<DeflectNode*> nodes;
+    std::unordered_map<std::string, DeflectNode> nodes;
 
     static void increaseSpeed(double& speedX, double& speedY, double baseSpeed)
     {

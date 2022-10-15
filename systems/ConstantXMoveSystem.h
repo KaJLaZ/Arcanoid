@@ -1,37 +1,36 @@
 #pragma once
 
-#include "../Framework.h"
 #include "../nodes/ConstantXMoveNode.h"
 
 class ConstantXMoveSystem
 {
 public:
-    void addNode(ConstantXMoveNode& node)
+    void addNode(std::string&& uuid, ConstantXMoveNode& node)
     {
-        nodes.emplace_back(node);
+        nodes.emplace(std::make_pair(uuid, node));
     }
     
     void process(FRKey key)
     {
-        std::for_each(nodes.begin(), nodes.end(),[key] (ConstantXMoveNode& node)
+        std::ranges::for_each(nodes,[key] (std::pair<const std::string, ConstantXMoveNode>& pair)
         {
             switch(key)
             {
-                case FRKey::LEFT:
-                    node.shiftCoord(-node.getMoveDistance(), 0);
+            case FRKey::LEFT:
+                pair.second.shiftCoord(-pair.second.getMoveDistance(), 0);
                 break;
-                case FRKey::RIGHT:
-                    node.shiftCoord(node.getMoveDistance(), 0);
+            case FRKey::RIGHT:
+                pair.second.shiftCoord(pair.second.getMoveDistance(), 0);
                 break;
             }
         });
     }
 
-    void removeNode(ConstantXMoveNode& node)
+    void removeNode(std::string key)
     {
-        nodes.erase(std::ranges::remove(nodes, node).begin(), nodes.end());
+        nodes.erase(key);
     }
     
 private:
-    std::vector<ConstantXMoveNode> nodes;
+    std::unordered_map<std::string, ConstantXMoveNode> nodes;
 };

@@ -11,7 +11,7 @@ class Arcanoid : public Framework {
 public:
 	ScreenResolution* screenResolution;
 	SystemManager* systemManager;
-	EntityManager* entityManager;
+	std::shared_ptr<EntityManager> entityManager;
 	bool initFlag = true;
 	bool releaseBallFlag = true;
 	
@@ -33,7 +33,7 @@ public:
 		{
 			config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
 			systemManager = new SystemManager();
-			entityManager = EntitiesFabric::makeEntityManager(configs_holder, systemManager);
+			entityManager = std::make_shared<EntityManager>(EntitiesFabric::makeEntityManager(configs_holder, systemManager));
 		}
 		initFlag = false;
 		
@@ -53,17 +53,17 @@ public:
 	}
 
 	virtual void onMouseMove(int x, int y, int xrelative, int yrelative) {
-		systemManager->getMouseTrackSystem().process(entityManager->getBall().getMouseTrackNode(), x, y);
+		systemManager->getMouseTrackSystem().process(x, y);
 	}
 
 	virtual void onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		if(button == FRMouseButton::LEFT && isReleased && releaseBallFlag)
 		{	//todo refactor
 			Ball& ball = entityManager->getBall();
-			systemManager->getConstantXMoveSystem().removeNode(ball.getConstantXMoveNode());
+			systemManager->getConstantXMoveSystem().removeNode(ball.getUUID());
 			systemManager->getreleaseBallSystem().process();
-			systemManager->getreleaseBallSystem().removeNodes();
-			systemManager->getMoveBallSystem().addNode(ball.getMoveBallNode());
+			systemManager->getreleaseBallSystem().removeNode(ball.getUUID());
+			systemManager->getMoveBallSystem().addNode(ball.getUUID(), ball.getMoveBallNode());
 			releaseBallFlag = false;
 		}
 	}

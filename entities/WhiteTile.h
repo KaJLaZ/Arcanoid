@@ -6,7 +6,7 @@
 class WhiteTile
 {
 public:
-    explicit WhiteTile(std::string uuid, RenderNode renderNode, DeflectNode deflectNode)
+    WhiteTile(std::string uuid, RenderNode renderNode, DeflectNode deflectNode)
         : uuid(std::move(uuid)),
           renderNode(std::move(renderNode)),
           deflectNode(std::move(deflectNode)){}

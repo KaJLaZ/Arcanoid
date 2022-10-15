@@ -1,4 +1,5 @@
 #pragma once
+
 #include "../components/Coord.h"
 #include "../components/Size.h"
 #include "../components/Speed.h"
@@ -43,12 +44,6 @@ public:
     Size getTargetSize()
     {
         return targetSize;
-    }
-
-    friend bool operator==(const DeflectNode& lhs, const DeflectNode& rhs)
-    {
-        return std::tie(lhs.ballCord, lhs.targetCord, lhs.ballSpeed, lhs.ballSize, lhs.targetSize) == std::tie(
-            rhs.ballCord, rhs.targetCord, rhs.ballSpeed, rhs.ballSize, rhs.targetSize);
     }
 
 private:
