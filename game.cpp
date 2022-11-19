@@ -10,7 +10,7 @@ class Arcanoid : public Framework {
 
 public:
 	ScreenResolution* screenResolution;
-	SystemManager* systemManager;
+	std::shared_ptr<SystemManager> systemManager;
 	std::shared_ptr<EntityManager> entityManager;
 	bool initFlag = true;
 	bool releaseBallFlag = true;
@@ -32,7 +32,7 @@ public:
 		if(initFlag)
 		{
 			config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
-			systemManager = new SystemManager();
+			systemManager = EntitiesFabric::systemManager();
 			entityManager = std::make_shared<EntityManager>(EntitiesFabric::makeEntityManager(configs_holder, systemManager));
 		}
 		initFlag = false;
@@ -45,31 +45,32 @@ public:
 	}
 
 	virtual bool Tick() {
-		systemManager->getMoveBallSystem().process();
-		systemManager->getDeflectSystem().process();
+		systemManager->getMoveBallSystem()->process();
+		systemManager->getDeflectSystem()->process();
 		drawTestBackground();
-		systemManager->getRenderSystem().process();
+		systemManager->getRenderSystem()->process();
 		return false;
 	}
 
 	virtual void onMouseMove(int x, int y, int xrelative, int yrelative) {
-		systemManager->getMouseTrackSystem().process(x, y);
+		systemManager->getMouseTrackSystem()->process(Coord(x, y));
 	}
 
 	virtual void onMouseButtonClick(FRMouseButton button, bool isReleased) {
 		if(button == FRMouseButton::LEFT && isReleased && releaseBallFlag)
 		{	//todo refactor
 			Ball& ball = entityManager->getBall();
-			systemManager->getConstantXMoveSystem().removeNode(ball.getUUID());
-			systemManager->getreleaseBallSystem().process();
-			systemManager->getreleaseBallSystem().removeNode(ball.getUUID());
-			systemManager->getMoveBallSystem().addNode(ball.getUUID(), ball.getMoveBallNode());
+			systemManager->getConstantXMoveSystem()->removeNode(ball.getUUID());
+			systemManager->getreleaseBallSystem()->process();
+			systemManager->getreleaseBallSystem()->removeNode(ball.getUUID());
+			systemManager->getMoveBallSystem()->addNode(ball.getUUID(), ball.getMoveBallNode());
 			releaseBallFlag = false;
 		}
 	}
 
 	virtual void onKeyPressed(FRKey k) {
-		systemManager->getConstantXMoveSystem().process(k);
+		systemManager->getPressedKeyTrackSystem()->process(k);
+		systemManager->getConstantXMoveSystem()->process();
 
 		//todo align constantXMoveSystem with others by crating last pressek key system and create system manager
 	}

@@ -3,9 +3,12 @@
 #include "../nodes/DeflectNode.h"
 #include "../utilities/Collider.h"
 
-class DeflectSystem
+class DeflectSystem : System<DeflectNode>
 {
 public:
+    DeflectSystem(std::unordered_map<std::string, DeflectNode> nodes)
+        : nodes(std::move(nodes)){}
+
     void addNode(std::string&& uuid, DeflectNode& node)
     {
         nodes.emplace(std::make_pair(uuid, node));
@@ -127,5 +130,10 @@ private:
             if(speedY >0 != signY > 0)
                 speedY = speedY * -1;
         }
+    }
+
+    void removeNode(std::string key)
+    {
+        nodes.erase(key);
     }
 };

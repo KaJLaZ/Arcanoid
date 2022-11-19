@@ -6,45 +6,64 @@
 #include "../systems/ReleaseBallSystem.h"
 #include "../systems/RenderSystem.h"
 #include "../systems/DeflectSystem.h"
+#include "../systems/PressedKeyTrackSystem.h"
 
 class SystemManager
 {
 public:
-    RenderSystem& getRenderSystem()
+    SystemManager(std::shared_ptr<RenderSystem> render_system, std::shared_ptr<ConstantXMoveSystem> constant_x_move_system,
+        std::shared_ptr<ReleaseBallSystem> release_ball_system, std::shared_ptr<MoveBallSystem> move_ball_system,
+        std::shared_ptr<MouseTrackSystem> mouse_track_system, std::shared_ptr<DeflectSystem> tile_deflect_system,
+        std::shared_ptr<PressedKeyTrackSystem> pressedKeyTrackSystem)
+        : renderSystem(std::move(render_system)),
+          constantXMoveSystem(std::move(constant_x_move_system)),
+          releaseBallSystem(std::move(release_ball_system)),
+          moveBallSystem(std::move(move_ball_system)),
+          mouseTrackSystem(std::move(mouse_track_system)),
+          tileDeflectSystem(std::move(tile_deflect_system)),
+          pressedKeyTrackSystem(std::move(pressedKeyTrackSystem)){}
+
+    std::shared_ptr<RenderSystem> getRenderSystem()
     {
         return renderSystem;
     }
 
-    ConstantXMoveSystem& getConstantXMoveSystem()
+    std::shared_ptr<ConstantXMoveSystem> getConstantXMoveSystem()
     {
         return constantXMoveSystem;
     }
 
-    ReleaseBallSystem& getreleaseBallSystem()
+    std::shared_ptr<ReleaseBallSystem> getreleaseBallSystem()
     {
         return releaseBallSystem;
     }
 
-    MoveBallSystem& getMoveBallSystem()
+    std::shared_ptr<MoveBallSystem> getMoveBallSystem()
     {
         return moveBallSystem;
     }
 
-    MouseTrackSystem& getMouseTrackSystem()
+    std::shared_ptr<MouseTrackSystem> getMouseTrackSystem()
     {
         return mouseTrackSystem;
     }
 
-    DeflectSystem& getDeflectSystem()
+    std::shared_ptr<DeflectSystem> getDeflectSystem()
     {
         return tileDeflectSystem;
     }
 
+    std::shared_ptr<PressedKeyTrackSystem> getPressedKeyTrackSystem()
+    {
+        return pressedKeyTrackSystem;
+    }
+
 private:
-    RenderSystem renderSystem;
-    ConstantXMoveSystem constantXMoveSystem;
-    ReleaseBallSystem releaseBallSystem;
-    MoveBallSystem moveBallSystem;
-    MouseTrackSystem mouseTrackSystem;
-    DeflectSystem tileDeflectSystem;
+    std::shared_ptr<RenderSystem> renderSystem;
+    std::shared_ptr<ConstantXMoveSystem> constantXMoveSystem;
+    std::shared_ptr<ReleaseBallSystem> releaseBallSystem;
+    std::shared_ptr<MoveBallSystem> moveBallSystem;
+    std::shared_ptr<MouseTrackSystem> mouseTrackSystem;
+    std::shared_ptr<DeflectSystem> tileDeflectSystem;
+    std::shared_ptr<PressedKeyTrackSystem> pressedKeyTrackSystem;
 };

@@ -1,26 +1,26 @@
 #pragma once
 
 #include "../utilities/ScreenResolution.h"
-#include "entities/BallStartConfig.h"
-#include "entities/PlatformStartConfig.h"
-#include "entities/WhiteTileStartConfig.h"
+#include "entities/BallConfig.h"
+#include "entities/PlatformConfig.h"
+#include "entities/WhiteTileConfig.h"
 
 namespace config
 {
     class ConfigResolutionAdjuster
     {
     public:
-        static PlatformStartConfig adjustPlatformConfig(PlatformStartConfig& config)
+        static PlatformConfig adjustPlatformConfig(PlatformConfig& config)
         {
-            return PlatformStartConfig{config.spriteFilePath,
+            return PlatformConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
                 adjustByWidthRes(config.width), adjustByHeightRes(config.height),
                 adjustByWidthRes(config.moveDistance)};
         }
 
-        static BallStartConfig adjustBallConfig(BallStartConfig& config)
+        static BallConfig adjustBallConfig(BallConfig& config)
         {
-            return BallStartConfig{config.spriteFilePath,
+            return BallConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
                 adjustByWidthRes(config.width), adjustByHeightRes(config.height),
                 adjustByWidthRes(config.speedX),
@@ -29,9 +29,9 @@ namespace config
                 adjustByWidthRes(config.baseSpeed)};
         }
 
-        static WhiteTileStartConfig adjustWhiteTileConfig(WhiteTileStartConfig& config)
+        static WhiteTileConfig adjustWhiteTileConfig(WhiteTileConfig& config)
         {
-            return WhiteTileStartConfig{config.spriteFilePath,
+            return WhiteTileConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
                 adjustByWidthRes(config.width), adjustByHeightRes(config.height),
                 config.healthPoints};

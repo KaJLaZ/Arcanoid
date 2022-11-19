@@ -4,9 +4,8 @@
 
 using nlohmann::json;
 
-//TODO rename prefix Start from all configs
 namespace config {
-struct BallStartConfig
+struct BallConfig
 {
     std::string spriteFilePath;
     int posX;
@@ -19,7 +18,7 @@ struct BallStartConfig
     double baseSpeed;
 };
     
-    void to_json(json& j, BallStartConfig& setting) {
+    void to_json(json& j, BallConfig& setting) {
         j = json{ {"spriteFilePath", setting.spriteFilePath},
         {"x", setting.posX}, {"y", setting.posY},
         {"width", setting.width}, {"height", setting.height},
@@ -28,7 +27,7 @@ struct BallStartConfig
         {"baseSpeed", setting.baseSpeed}};
     }
 
-    void from_json(const json& j, BallStartConfig& setting) {
+    void from_json(const json& j, BallConfig& setting) {
         j.at("spriteFilePath").get_to(setting.spriteFilePath);
         j.at("x").get_to(setting.posX);
         j.at("y").get_to(setting.posY);

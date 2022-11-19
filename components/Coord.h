@@ -24,11 +24,6 @@ public:
 		this->y = y;
 	}
 
-	friend bool operator==(const Coord& lhs, const Coord& rhs)
-	{
-		return std::tie(lhs.x, lhs.y) == std::tie(rhs.x, rhs.y);
-	}
-
 private:
 	double x;
 	double y;

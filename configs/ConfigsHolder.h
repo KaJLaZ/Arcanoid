@@ -1,54 +1,54 @@
 #pragma once
 #include "../utilities/ConfigLoader.h"
-#include "entities/BallStartConfig.h"
-#include "entities/PlatformStartConfig.h"
-#include "entities/WhiteTileStartConfig.h"
+#include "entities/BallConfig.h"
+#include "entities/PlatformConfig.h"
+#include "entities/WhiteTileConfig.h"
 
 namespace config
 {
     class ConfigsHolder
     {
     public:
-        inline static const char* PLATFORM_CONFIG_FILE_PATH = "resources/configs/PlatformStartConfig.json";
-        inline static const char* WHITE_TILE_CONFIG_FILE_PATH = "resources/configs/WhiteTileStartConfig.json";
-        inline static const char* BALL_CONFIG_FILE_PATH = "resources/configs/BallStartConfig.json";
+        inline static const char* PLATFORM_CONFIG_FILE_PATH = "resources/configs/PlatformConfig.json";
+        inline static const char* WHITE_TILE_CONFIG_FILE_PATH = "resources/configs/WhiteTileConfig.json";
+        inline static const char* BALL_CONFIG_FILE_PATH = "resources/configs/BallConfig.json";
         
-        PlatformStartConfig getPlatformStartConfig()
+        PlatformConfig getPlatformConfig()
         {
-            if(platformStartConfig == nullptr)
+            if(platformConfig == nullptr)
             {
-                platformStartConfig = std::make_unique<PlatformStartConfig>(
-                    ConfigLoader::loadConfig<PlatformStartConfig>(PLATFORM_CONFIG_FILE_PATH));
+                platformConfig = std::make_unique<PlatformConfig>(
+                    ConfigLoader::loadConfig<PlatformConfig>(PLATFORM_CONFIG_FILE_PATH));
                 
             }
-            return *platformStartConfig;
+            return *platformConfig;
         }
 
-        WhiteTileStartConfig getWhiteTileStartConfig()
+        WhiteTileConfig getWhiteTileConfig()
         {
-            if(whiteTileStartConfig == nullptr)
+            if(whiteTileConfig == nullptr)
             {
-                whiteTileStartConfig = std::make_unique<WhiteTileStartConfig>(
-                    ConfigLoader::loadConfig<WhiteTileStartConfig>(WHITE_TILE_CONFIG_FILE_PATH));
+                whiteTileConfig = std::make_unique<WhiteTileConfig>(
+                    ConfigLoader::loadConfig<WhiteTileConfig>(WHITE_TILE_CONFIG_FILE_PATH));
             }
-            return *whiteTileStartConfig;
+            return *whiteTileConfig;
         }
 
-        BallStartConfig getBallStartConfig()
+        BallConfig getBallConfig()
         {
-            if(ballStartConfig == nullptr)
+            if(ballConfig == nullptr)
             {
-                ballStartConfig = std::make_unique<BallStartConfig>(
-                    ConfigLoader::loadConfig<BallStartConfig>(BALL_CONFIG_FILE_PATH));
+                ballConfig = std::make_unique<BallConfig>(
+                    ConfigLoader::loadConfig<BallConfig>(BALL_CONFIG_FILE_PATH));
             }
-            return *ballStartConfig;
+            return *ballConfig;
         }
 
         //TODO think about modification in oop style to not multiple mess
     
     private:
-        std::unique_ptr<PlatformStartConfig> platformStartConfig;
-        std::unique_ptr<WhiteTileStartConfig> whiteTileStartConfig;
-        std::unique_ptr<BallStartConfig> ballStartConfig;
+        std::unique_ptr<PlatformConfig> platformConfig;
+        std::unique_ptr<WhiteTileConfig> whiteTileConfig;
+        std::unique_ptr<BallConfig> ballConfig;
     };
 }

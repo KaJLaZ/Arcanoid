@@ -3,9 +3,12 @@
 #include "../nodes/ReleaseBallNode.h"
 #include "cmath"
 
-class ReleaseBallSystem
+class ReleaseBallSystem : System<ReleaseBallNode>
 {
 public:
+    ReleaseBallSystem(std::unordered_map<std::string, ReleaseBallNode> nodes)
+        : nodes(std::move(nodes)){}
+
     void addNode(std::string&& uuid, ReleaseBallNode& node)
     {
         nodes.emplace(std::make_pair(uuid, node));

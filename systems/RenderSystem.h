@@ -2,9 +2,12 @@
 #include <algorithm>
 #include "../nodes/RenderNode.h"
 
-class RenderSystem
+class RenderSystem : System<RenderNode>
 {
 public:
+    RenderSystem(std::unordered_map<std::string, RenderNode> nodes)
+        : nodes(std::move(nodes)){}
+
     void addNode(std::string&& uuid, RenderNode& node)
     {
         setSpriteSize(&*node.getSprite(), node.getSize().getWidth(), node.getSize().getHeigth());
