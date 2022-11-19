@@ -10,7 +10,9 @@ namespace config
     class ConfigResolutionAdjuster
     {
     public:
-        static PlatformConfig adjustPlatformConfig(PlatformConfig& config)
+        ConfigResolutionAdjuster(ScreenResolution resolution): resolution(resolution){}
+
+        PlatformConfig getAdjustedPlatformConfig(PlatformConfig&& config)
         {
             return PlatformConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
@@ -18,7 +20,7 @@ namespace config
                 adjustByWidthRes(config.moveDistance)};
         }
 
-        static BallConfig adjustBallConfig(BallConfig& config)
+        BallConfig getAdjustedBallConfig(BallConfig&& config)
         {
             return BallConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
@@ -29,7 +31,7 @@ namespace config
                 adjustByWidthRes(config.baseSpeed)};
         }
 
-        static WhiteTileConfig adjustWhiteTileConfig(WhiteTileConfig& config)
+        WhiteTileConfig getAdjustedWhiteTileConfig(WhiteTileConfig&& config)
         {
             return WhiteTileConfig{config.spriteFilePath,
                 adjustByWidthRes(config.posX), adjustByHeightRes(config.posY),
@@ -38,15 +40,18 @@ namespace config
         }
         
     private:
+        ScreenResolution resolution;
+        
         template<class T>
-        static T adjustByWidthRes(T& percentFromResolution)
+        T adjustByWidthRes(T& percentFromResolution)
         {
-            return percentFromResolution * ScreenResolution::WIDTH / 100;
+            return percentFromResolution * resolution.width / 100;
         }
-
-        static int adjustByHeightRes(int& percentFromResolution)
+        
+        template<class T>
+        int adjustByHeightRes(T& percentFromResolution)
         {
-            return percentFromResolution * ScreenResolution::HEIGHT / 100;
+            return percentFromResolution * resolution.height / 100;
         }
     };
 }

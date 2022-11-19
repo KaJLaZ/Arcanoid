@@ -4,6 +4,7 @@ class Speed
 {
 public:
     Speed(double& x, double& y): x(x), y(y){}
+    Speed(double&& x, double&& y): x(x), y(y){}
     
     double getX() {
         return x;

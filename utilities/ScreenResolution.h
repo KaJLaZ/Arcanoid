@@ -2,6 +2,6 @@
 
 struct ScreenResolution
 {
-    inline static int WIDTH = 800;
-    inline static int HEIGHT = 600;
+    int width;
+    int height;
 };

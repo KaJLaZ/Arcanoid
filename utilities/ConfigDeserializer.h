@@ -4,11 +4,11 @@
 
 using nlohmann::json;
 
-class ConfigLoader
+class ConfigDeserializer
 {
 public:
     template<class T>
-    static T loadConfig(const char* path)
+    static T deserializeConfig(const char* path)
     {
         return json::parse(std::ifstream(path))
             .get<T>();

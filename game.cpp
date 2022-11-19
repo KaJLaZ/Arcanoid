@@ -1,5 +1,5 @@
 #include "Framework.h"
-#include "configs/ConfigsHolder.h"
+#include "fabrics/HoldersFabric.h"
 #include "fabrics/EntitiesFabric.h"
 #include "managers/EntityManager.h"
 #include "managers/SystemManager.h"
@@ -9,7 +9,7 @@
 class Arcanoid : public Framework {
 
 public:
-	ScreenResolution* screenResolution;
+	std::shared_ptr<ScreenResolution> screenResolution;
 	std::shared_ptr<SystemManager> systemManager;
 	std::shared_ptr<EntityManager> entityManager;
 	bool initFlag = true;
@@ -21,9 +21,9 @@ public:
 		std::cin >> width;
 		std::cout << "Input screen height" << std::endl;
 		std::cin >> height;*/
-		
-		width = ScreenResolution::WIDTH;
-		height = ScreenResolution::HEIGHT;
+		screenResolution = std::make_shared<ScreenResolution>(800, 600);
+		width = screenResolution->width;
+		height = screenResolution->height;
 		fullscreen = false;
 	}
 
@@ -31,9 +31,13 @@ public:
 		//todo refactor
 		if(initFlag)
 		{
-			config::ConfigsHolder* configs_holder = new config::ConfigsHolder();
+			auto holderFabric = HoldersFabric();
+			auto configHolder = std::make_shared<ConfigsHolder>(holderFabric.createConfigHolder(*screenResolution));
+			SharedComponentsFabric componentsFabric = SharedComponentsFabric(configHolder, *screenResolution);
+			auto componentHolder = std::make_shared<SharedComponentHolder>(holderFabric.createSharedComponentHolder(componentsFabric));
 			systemManager = EntitiesFabric::systemManager();
-			entityManager = std::make_shared<EntityManager>(EntitiesFabric::makeEntityManager(configs_holder, systemManager));
+			entityManager = std::make_shared<EntityManager>(EntitiesFabric::makeEntityManager(
+				configHolder, componentHolder,  systemManager, *screenResolution));
 		}
 		initFlag = false;
 		
